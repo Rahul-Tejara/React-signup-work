@@ -1,20 +1,17 @@
-import React, { Component } from "react";
-import {
-  HelpBlock,
-  FormGroup,
-  FormControl,
-  ControlLabel
-} from "react-bootstrap";
+import React from "react";
 import "./styles.css";
-import Button from "react-bootstrap-button-loader";
 import Emailvalidator from "email-validator";
+import DatePicker from "react-datepicker";
+import moment from "moment";
+import "react-datepicker/dist/react-datepicker.css";
 
-function validate(email, username, password) {
+function validate(email, username, password, confpassword) {
   // true means invalid, so our conditions got reversed
   return {
-    email: email.length === 0, //true if email is empty
-    username: username.length === 0, //true if username is empty
-    password: password.length === 0 //true if password is empty
+    email: !Emailvalidator.validate(email) || email.length === 0, //true if email is empty
+    username: username.length < 20, //true if username is empty
+    password: password.length < 6, //true if password is empty
+    confpassword: confpassword != password
   };
 }
 export default class Signup extends React.Component {
@@ -24,32 +21,36 @@ export default class Signup extends React.Component {
       email: "",
       username: "",
       password: "",
+      confpassword: "",
+      startDate: moment(),
 
       touched: {
         email: false,
         username: false,
-        password: false
+        password: false,
+        confpassword: false
       }
     };
   }
 
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
+  handleEmailChange = evt => {
+    this.setState({ email: evt.target.value });
   };
 
-  // handleEmailChange = evt => {
-  //   this.setState({ email: evt.target.value });
-  // };
+  handleUsernameChange = evt => {
+    this.setState({ username: evt.target.value });
+  };
 
-  // handleUsernameChange = evt => {
-  //   this.setState({ username: evt.target.value });
-  // };
-
-  // handlePasswordChange = evt => {
-  //   this.setState({ password: evt.target.value });
-  // };
+  handlePasswordChange = evt => {
+    this.setState({ password: evt.target.value });
+  };
+  handleDateChange = evt => {
+    // console.log(evt.target.value);
+    this.setState({ startDate: evt.target.value });
+  };
+  handleConfPasswordChange = evt => {
+    this.setState({ confpassword: evt.target.value });
+  };
   handleBlur = field => evt => {
     this.setState({
       touched: { ...this.state.touched, [field]: true }
@@ -68,7 +69,8 @@ export default class Signup extends React.Component {
     const errors = validate(
       this.state.email,
       this.state.username,
-      this.state.password
+      this.state.password,
+      this.state.confpassword
     );
     const isDisabled = Object.keys(errors).some(x => errors[x]);
     return !isDisabled;
@@ -78,10 +80,11 @@ export default class Signup extends React.Component {
     const errors = validate(
       this.state.email,
       this.state.username,
-      this.state.password
+      this.state.password,
+      this.state.confpassword
     );
-    const { email, username, password } = this.state;
-    console.log(email, username, password);
+    const { email, username, password, confpassword } = this.state;
+
     const isDisabled = Object.keys(errors).some(x => errors[x]);
 
     const shouldMarkError = field => {
@@ -93,53 +96,57 @@ export default class Signup extends React.Component {
 
     return (
       <form onSubmit={this.handleSubmit}>
-        <input
-          className={shouldMarkError("email") ? "error" : ""}
-          type="text"
-          placeholder="Enter email"
-          value={this.state.email}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur("email")}
-        />
-        <span className={shouldMarkError("email") ? "error" : "hidden"}>
-          invalid email
-        </span>
-
+        <h1> Sign up </h1>
         <input
           className={shouldMarkError("username") ? "error" : ""}
           type="text"
           placeholder="Enter username"
           value={this.state.username}
-          onChange={this.handleChange}
+          onChange={this.handleUsernameChange}
           onBlur={this.handleBlur("username")}
         />
         <span className={shouldMarkError("username") ? "error" : "hidden"}>
           invalid username
         </span>
-
+        <input
+          className={shouldMarkError("email") ? "error" : ""}
+          type="text"
+          placeholder="Enter email"
+          value={this.state.email}
+          onChange={this.handleEmailChange}
+          onBlur={this.handleBlur("email")}
+        />
+        <span className={shouldMarkError("email") ? "error" : "hidden"}>
+          invalid email
+        </span>
         <input
           className={shouldMarkError("password") ? "error" : ""}
           type="password"
           placeholder="Enter password"
           value={this.state.password}
-          onChange={this.handleChange}
+          onChange={this.handlePasswordChange}
           onBlur={this.handleBlur("password")}
         />
         <span className={shouldMarkError("password") ? "error" : "hidden"}>
           invalid password
         </span>
-
-        <button disabled={isDisabled}>Sign up</button>
+        <input
+          className={shouldMarkError("password") ? "error" : ""}
+          type="password"
+          placeholder="Confirm password"
+          value={this.state.confpassword}
+          onChange={this.handleConfPasswordChange}
+          onBlur={this.handleBlur("confpassword")}
+        />
+        <span className={shouldMarkError("confpassword") ? "error" : "hidden"}>
+          not matching password
+        </span>
+        <DatePicker
+          selected={this.state.startDate}
+          onChange={this.handleDateChange}
+        />
+        <button disabled={isDisabled}>Signup</button>
       </form>
-    );
-  }
-
-  validateForm() {
-    return (
-      Emailvalidator.validate(this.state.email) &&
-      this.state.email.length > 0 &&
-      this.state.password.length > 6 &&
-      this.state.password === this.state.confirmPassword
     );
   }
 }

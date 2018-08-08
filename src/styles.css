@@ -1,11 +1,32 @@
 * {
   box-sizing: border-box;
 }
+#root {
+  /* position: fixed;
+  top: 35%;
+  left: 57%; */
+  width: 310px;
+  /* height: 32em; */
+  /* margin-top: -9em; 
+  margin-left: -15em;  */
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+h1 {
+  font-family: Brown-Bold;
+  font-size: 2em;
+  line-height: 1.13;
+  text-transform: uppercase;
+  text-align: left;
+  color: #022d3d;
+}
 
 body {
   padding-top: 0;
   font-family: Helvetica Neue, Helvetica;
-  background: azure;
+  background: #022d3d;
+  background-image: "https://www.publicdomainpictures.net/pictures/70000/velka/natural-backgrounds-with-flowers-1389522552Lgz.jpg";
 }
 
 h3 {
@@ -15,7 +36,7 @@ h3 {
 }
 
 form {
-  padding: 0 40px;
+  padding: 25px;
 }
 
 form input {
@@ -25,7 +46,8 @@ form input {
   padding: 5px 10px;
   margin: 10px 0;
   border-radius: 5px;
-  border: 1px solid #ddd;
+  background-color: #ffffff;
+  border: solid 1px #00adee;
 }
 
 form input.error {
@@ -41,16 +63,20 @@ form span.error {
 }
 
 form button {
+  text-transform: uppercase;
   display: block;
   width: 100%;
-  appearance: none;
   border-radius: 5px;
-  background-color: #84c00c;
-  color: #fff;
+  background-color: #00adee;
   border: none;
-  font-size: 16px;
+  /* font-size: 16px; */
   height: 40px;
   margin-top: 30px;
+  cursor: pointer;
+  font-size: 1.25em;
+  letter-spacing: 2px;
+  font-weight: 500;
+  color: #ffffff;
 }
 
 form button:hover {
@@ -58,6 +84,7 @@ form button:hover {
 }
 
 form button:disabled {
-  background-color: #dbf99f;
+  background-color: #cccccc;
   color: #333;
+  cursor: not-allowed;
 }
