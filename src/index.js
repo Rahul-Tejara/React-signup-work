@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Signup from "./signup.js";
+import App from "./app.jsx";
 import "./styles.css";
 
 const rootElement = document.getElementById("root");
-ReactDOM.render(<Signup />, rootElement);
+ReactDOM.render(<App />, rootElement);

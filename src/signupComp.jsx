@@ -6,12 +6,11 @@ import moment from "moment";
 import "react-datepicker/dist/react-datepicker.css";
 
 function validate(email, username, password, confpassword) {
-  // true means invalid, so our conditions got reversed
   return {
-    email: !Emailvalidator.validate(email) || email.length === 0, //true if email is empty
-    username: username.length < 20, //true if username is empty
-    password: password.length < 6, //true if password is empty
-    confpassword: confpassword != password
+    email: !Emailvalidator.validate(email) || email.length === 0,
+    username: username.length < 20,
+    password: password.length < 6,
+    confpassword: confpassword != password || password.length < 6
   };
 }
 export default class Signup extends React.Component {
@@ -33,24 +32,6 @@ export default class Signup extends React.Component {
     };
   }
 
-  handleEmailChange = evt => {
-    this.setState({ email: evt.target.value });
-  };
-
-  handleUsernameChange = evt => {
-    this.setState({ username: evt.target.value });
-  };
-
-  handlePasswordChange = evt => {
-    this.setState({ password: evt.target.value });
-  };
-  handleDateChange = evt => {
-    // console.log(evt.target.value);
-    this.setState({ startDate: evt.target.value });
-  };
-  handleConfPasswordChange = evt => {
-    this.setState({ confpassword: evt.target.value });
-  };
   handleBlur = field => evt => {
     this.setState({
       touched: { ...this.state.touched, [field]: true }
@@ -62,8 +43,23 @@ export default class Signup extends React.Component {
       evt.preventDefault();
       return;
     }
-    const { email, username, password } = this.state;
-    alert(`Signed up with email: ${email} password: ${password}`);
+    const { email, username, password, confpassword, startDate } = this.state;
+    console.log(
+      "usename is-: " +
+        username +
+        "user email is-:" +
+        email +
+        "userSelected Date is-:" +
+        startDate.format("LL")
+    );
+    alert(
+      "usename is-: " +
+        username +
+        "\nuser email is-:" +
+        email +
+        "\nuserSelected Date is-:" +
+        startDate.format("LL")
+    );
   };
   canBeSubmitted() {
     const errors = validate(
@@ -83,7 +79,6 @@ export default class Signup extends React.Component {
       this.state.password,
       this.state.confpassword
     );
-    const { email, username, password, confpassword } = this.state;
 
     const isDisabled = Object.keys(errors).some(x => errors[x]);
 
@@ -102,18 +97,18 @@ export default class Signup extends React.Component {
           type="text"
           placeholder="Enter username"
           value={this.state.username}
-          onChange={this.handleUsernameChange}
+          onChange={evt => this.setState({ username: evt.target.value })}
           onBlur={this.handleBlur("username")}
         />
         <span className={shouldMarkError("username") ? "error" : "hidden"}>
-          invalid username
+          invalid username-: please enter atleast 20 character
         </span>
         <input
           className={shouldMarkError("email") ? "error" : ""}
           type="text"
           placeholder="Enter email"
           value={this.state.email}
-          onChange={this.handleEmailChange}
+          onChange={evt => this.setState({ email: evt.target.value })}
           onBlur={this.handleBlur("email")}
         />
         <span className={shouldMarkError("email") ? "error" : "hidden"}>
@@ -124,18 +119,18 @@ export default class Signup extends React.Component {
           type="password"
           placeholder="Enter password"
           value={this.state.password}
-          onChange={this.handlePasswordChange}
+          onChange={evt => this.setState({ password: evt.target.value })}
           onBlur={this.handleBlur("password")}
         />
         <span className={shouldMarkError("password") ? "error" : "hidden"}>
-          invalid password
+          invalid password-: please enter atleast 6 character
         </span>
         <input
           className={shouldMarkError("password") ? "error" : ""}
           type="password"
           placeholder="Confirm password"
           value={this.state.confpassword}
-          onChange={this.handleConfPasswordChange}
+          onChange={evt => this.setState({ confpassword: evt.target.value })}
           onBlur={this.handleBlur("confpassword")}
         />
         <span className={shouldMarkError("confpassword") ? "error" : "hidden"}>
@@ -143,7 +138,7 @@ export default class Signup extends React.Component {
         </span>
         <DatePicker
           selected={this.state.startDate}
-          onChange={this.handleDateChange}
+          onChange={evt => this.setState({ startDate: evt })}
         />
         <button disabled={isDisabled}>Signup</button>
       </form>
